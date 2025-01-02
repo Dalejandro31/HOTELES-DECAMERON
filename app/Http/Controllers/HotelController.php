@@ -96,6 +96,37 @@ class HotelController extends Controller
     }
 
     /**
+     * Obtener detalles de un hotel.
+     *
+     * @OA\Get(
+     *     path="/hotels/{id}",
+     *     tags={"Hoteles"},
+     *     summary="Obtener detalles de un hotel",
+     *     description="Devuelve los detalles de un hotel por su ID.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID del hotel",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalles del hotel.",
+     *         @OA\JsonContent(ref="#/components/schemas/Hotel")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Hotel no encontrado."
+     *     )
+     * )
+     */
+    public function show(Hotel $hotel)
+    {
+        return response()->json($hotel, 200);
+    }
+
+    /**
      * Actualizar un hotel.
      *
      * @OA\Put(
