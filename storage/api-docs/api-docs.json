@@ -1,0 +1,278 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Hoteles Decameron API",
+        "description": "API RESTful para la gestión de hoteles y habitaciones.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api"
+        }
+    ],
+    "paths": {
+        "/hotels": {
+            "get": {
+                "tags": [
+                    "Hoteles"
+                ],
+                "summary": "Obtener lista de hoteles",
+                "description": "Devuelve una lista de todos los hoteles con sus habitaciones asociadas.",
+                "operationId": "54cf891af66ecd8bfd0a6d26b1cc8fc8",
+                "responses": {
+                    "200": {
+                        "description": "Lista de hoteles con habitaciones."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Hoteles"
+                ],
+                "summary": "Crear un hotel",
+                "description": "Crear un nuevo hotel.",
+                "operationId": "c1cbc2652ea15a2c9bfd3c1f25f626f3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "address",
+                                    "city",
+                                    "nit",
+                                    "max_rooms"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Hotel Decameron"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "Calle 123 #45-67"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "example": "Cartagena"
+                                    },
+                                    "nit": {
+                                        "type": "string",
+                                        "example": "12345678-9"
+                                    },
+                                    "max_rooms": {
+                                        "type": "integer",
+                                        "example": 50
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Hotel creado exitosamente."
+                    },
+                    "422": {
+                        "description": "Error de validación."
+                    }
+                }
+            }
+        },
+        "/rooms": {
+            "get": {
+                "tags": [
+                    "Habitaciones"
+                ],
+                "summary": "Obtener lista de habitaciones",
+                "description": "Devuelve una lista de todas las habitaciones junto con el hotel al que pertenecen.",
+                "operationId": "fc04f85434400dbf0e26d2ec77a5878d",
+                "responses": {
+                    "200": {
+                        "description": "Lista de habitaciones."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Habitaciones"
+                ],
+                "summary": "Crear una habitación",
+                "description": "Crea una nueva habitación asociada a un hotel.",
+                "operationId": "afb43684c849533c65e931df636b4de6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "hotel_id",
+                                    "type",
+                                    "accommodation",
+                                    "quantity"
+                                ],
+                                "properties": {
+                                    "hotel_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "Standard"
+                                    },
+                                    "accommodation": {
+                                        "type": "string",
+                                        "example": "Doble"
+                                    },
+                                    "quantity": {
+                                        "type": "integer",
+                                        "example": 10
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Habitación creada exitosamente."
+                    },
+                    "422": {
+                        "description": "Error de validación."
+                    }
+                }
+            }
+        },
+        "/rooms/{id}": {
+            "get": {
+                "tags": [
+                    "Habitaciones"
+                ],
+                "summary": "Obtener detalles de una habitación",
+                "description": "Devuelve los detalles de una habitación específica, incluyendo el hotel asociado.",
+                "operationId": "1c71dfd30793f918f07dc95b23daefc6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la habitación",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalles de la habitación."
+                    },
+                    "404": {
+                        "description": "Habitación no encontrada."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Habitaciones"
+                ],
+                "summary": "Actualizar una habitación",
+                "description": "Actualiza los detalles de una habitación específica.",
+                "operationId": "ea75b11760a871bba18cf5f9e43a5b70",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la habitación",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type",
+                                    "accommodation",
+                                    "quantity"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "example": "Junior"
+                                    },
+                                    "accommodation": {
+                                        "type": "string",
+                                        "example": "Triple"
+                                    },
+                                    "quantity": {
+                                        "type": "integer",
+                                        "example": 5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Habitación actualizada exitosamente."
+                    },
+                    "422": {
+                        "description": "Error de validación."
+                    },
+                    "404": {
+                        "description": "Habitación no encontrada."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Habitaciones"
+                ],
+                "summary": "Eliminar una habitación",
+                "description": "Elimina una habitación específica por su ID.",
+                "operationId": "cf9104dbefd91a81bebb07cafe7e70cf",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la habitación",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Habitación eliminada exitosamente."
+                    },
+                    "404": {
+                        "description": "Habitación no encontrada."
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Hoteles",
+            "description": "Operaciones relacionadas con los hoteles"
+        },
+        {
+            "name": "Habitaciones",
+            "description": "Operaciones relacionadas con las habitaciones"
+        }
+    ]
+}
