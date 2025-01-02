@@ -30,11 +30,7 @@ class HotelController extends Controller
      *     description="Devuelve una lista de todos los hoteles con sus habitaciones asociadas.",
      *     @OA\Response(
      *         response=200,
-     *         description="Lista de hoteles con habitaciones.",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/Hotel")
-     *         )
+     *         description="Lista de hoteles con habitaciones."
      *     )
      * )
      */
@@ -64,8 +60,7 @@ class HotelController extends Controller
      *     ),
      *     @OA\Response(
      *         response=201,
-     *         description="Hotel creado exitosamente.",
-     *         @OA\JsonContent(ref="#/components/schemas/Hotel")
+     *         description="Hotel creado exitosamente."
      *     ),
      *     @OA\Response(
      *         response=422,
@@ -94,32 +89,6 @@ class HotelController extends Controller
         }
     }
 
-    /**
-     * Obtener un hotel por ID.
-     *
-     * @OA\Get(
-     *     path="/hotels/{id}",
-     *     tags={"Hoteles"},
-     *     summary="Obtener información de un hotel",
-     *     description="Devuelve la información detallada de un hotel con sus habitaciones asociadas.",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="ID del hotel",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Información del hotel.",
-     *         @OA\JsonContent(ref="#/components/schemas/Hotel")
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Hotel no encontrado."
-     *     )
-     * )
-     */
     public function show(Hotel $hotel)
     {
         return $hotel->load('rooms');
@@ -162,7 +131,6 @@ class HotelController extends Controller
      *     )
      * )
      */
-
     public function update(Request $request, Hotel $hotel)
     {
         $validated = $request->validate([
@@ -208,4 +176,3 @@ class HotelController extends Controller
         return response()->noContent();
     }
 }
-
