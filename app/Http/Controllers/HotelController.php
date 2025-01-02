@@ -30,7 +30,11 @@ class HotelController extends Controller
      *     description="Devuelve una lista de todos los hoteles con sus habitaciones asociadas.",
      *     @OA\Response(
      *         response=200,
-     *         description="Lista de hoteles con habitaciones."
+     *         description="Lista de hoteles con habitaciones.",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Hotel")
+     *         )
      *     )
      * )
      */
@@ -60,7 +64,8 @@ class HotelController extends Controller
      *     ),
      *     @OA\Response(
      *         response=201,
-     *         description="Hotel creado exitosamente."
+     *         description="Hotel creado exitosamente.",
+     *         @OA\JsonContent(ref="#/components/schemas/Hotel")
      *     ),
      *     @OA\Response(
      *         response=422,
@@ -89,10 +94,74 @@ class HotelController extends Controller
         }
     }
 
+    /**
+     * Obtener un hotel por ID.
+     *
+     * @OA\Get(
+     *     path="/hotels/{id}",
+     *     tags={"Hoteles"},
+     *     summary="Obtener información de un hotel",
+     *     description="Devuelve la información detallada de un hotel con sus habitaciones asociadas.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID del hotel",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Información del hotel.",
+     *         @OA\JsonContent(ref="#/components/schemas/Hotel")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Hotel no encontrado."
+     *     )
+     * )
+     */
     public function show(Hotel $hotel)
     {
         return $hotel->load('rooms');
     }
+
+    /**
+     * Actualizar un hotel.
+     *
+     * @OA\Put(
+     *     path="/hotels/{id}",
+     *     tags={"Hoteles"},
+     *     summary="Actualizar un hotel",
+     *     description="Actualiza los detalles de un hotel existente.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID del hotel",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "address", "city", "nit", "max_rooms"},
+     *             @OA\Property(property="name", type="string", example="Hotel Decameron"),
+     *             @OA\Property(property="address", type="string", example="Calle 123 #45-67"),
+     *             @OA\Property(property="city", type="string", example="Cartagena"),
+     *             @OA\Property(property="nit", type="string", example="12345678-9"),
+     *             @OA\Property(property="max_rooms", type="integer", example=50)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Hotel actualizado exitosamente.",
+     *         @OA\JsonContent(ref="#/components/schemas/Hotel")
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validación."
+     *     )
+     * )
+     */
 
     public function update(Request $request, Hotel $hotel)
     {
@@ -108,9 +177,35 @@ class HotelController extends Controller
         return response()->json($hotel, 200);  
     }
 
+    /**
+     * Eliminar un hotel.
+     *
+     * @OA\Delete(
+     *     path="/hotels/{id}",
+     *     tags={"Hoteles"},
+     *     summary="Eliminar un hotel",
+     *     description="Elimina un hotel por ID.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID del hotel",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Hotel eliminado exitosamente."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Hotel no encontrado."
+     *     )
+     * )
+     */
     public function destroy(Hotel $hotel)
     {
         $hotel->delete();
         return response()->noContent();
     }
 }
+
