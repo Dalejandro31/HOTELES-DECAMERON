@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('hotel_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['Standard', 'Junior', 'Suite']);
-            $table->enum('accommodation', ['Sencilla', 'Doble', 'Triple', 'Cuádruple']);
+            $table->enum('accommodation', ['Sencilla', 'Doble', 'Triple', 'Cuadruple']);
             $table->integer('quantity');
             $table->timestamps();
         });
