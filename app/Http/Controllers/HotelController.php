@@ -16,8 +16,23 @@ use Illuminate\Http\Request;
  *     name="Hoteles",
  *     description="Operaciones relacionadas con los hoteles"
  * )
+ *
+ * @OA\Schema(
+ *     schema="Hotel",
+ *     type="object",
+ *     title="Hotel",
+ *     description="Esquema de un hotel",
+ *     required={"name", "address", "city", "nit", "max_rooms"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="name", type="string", example="Hotel Decameron"),
+ *     @OA\Property(property="address", type="string", example="Calle 123 #45-67"),
+ *     @OA\Property(property="city", type="string", example="Cartagena"),
+ *     @OA\Property(property="nit", type="string", example="12345678-9"),
+ *     @OA\Property(property="max_rooms", type="integer", example=50),
+ *     @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+ * )
  */
-
 class HotelController extends Controller
 {
     /**
@@ -34,13 +49,12 @@ class HotelController extends Controller
      *     )
      * )
      */
-
     public function index()
     {
         return Hotel::with('rooms')->get();
     }
 
-     /**
+    /**
      * Crear un nuevo hotel.
      *
      * @OA\Post(
@@ -49,14 +63,7 @@ class HotelController extends Controller
      *     summary="Crear un hotel",
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(
-     *             required={"name", "address", "city", "nit", "max_rooms"},
-     *             @OA\Property(property="name", type="string", example="Hotel Decameron"),
-     *             @OA\Property(property="address", type="string", example="Calle 123 #45-67"),
-     *             @OA\Property(property="city", type="string", example="Cartagena"),
-     *             @OA\Property(property="nit", type="string", example="12345678-9"),
-     *             @OA\Property(property="max_rooms", type="integer", example=50)
-     *         )
+     *         @OA\JsonContent(ref="#/components/schemas/Hotel")
      *     ),
      *     @OA\Response(
      *         response=201,
@@ -68,7 +75,6 @@ class HotelController extends Controller
      *     )
      * )
      */
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -89,11 +95,6 @@ class HotelController extends Controller
         }
     }
 
-    public function show(Hotel $hotel)
-    {
-        return $hotel->load('rooms');
-    }
-
     /**
      * Actualizar un hotel.
      *
@@ -111,14 +112,7 @@ class HotelController extends Controller
      *     ),
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(
-     *             required={"name", "address", "city", "nit", "max_rooms"},
-     *             @OA\Property(property="name", type="string", example="Hotel Decameron"),
-     *             @OA\Property(property="address", type="string", example="Calle 123 #45-67"),
-     *             @OA\Property(property="city", type="string", example="Cartagena"),
-     *             @OA\Property(property="nit", type="string", example="12345678-9"),
-     *             @OA\Property(property="max_rooms", type="integer", example=50)
-     *         )
+     *         @OA\JsonContent(ref="#/components/schemas/Hotel")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -142,7 +136,7 @@ class HotelController extends Controller
         ]);
 
         $hotel->update($validated);
-        return response()->json($hotel, 200);  
+        return response()->json($hotel, 200);
     }
 
     /**
