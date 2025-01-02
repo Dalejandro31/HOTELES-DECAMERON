@@ -165,31 +165,44 @@ class RoomController extends Controller
      * )
      */
 
-    public function update(Request $request, Room $room)
-    {
-        $validated = $request->validate([
-            'type' => 'required|in:Standard,Junior,Suite',
-            'accommodation' => 'required',
-            'quantity' => 'required|integer|min:1',
-        ]);
-
-        // Validar las acomodaciones según el tipo de habitación
-        $this->validateAccommodation($validated['type'], $validated['accommodation']);
-
-        $hotel = $room->hotel;
-
-        // Validar que no exceda el número máximo de habitaciones
-        $totalRooms = $hotel->rooms->sum('quantity') - $room->quantity + $validated['quantity'];
-
-        if ($totalRooms > $hotel->max_rooms) {
-            return response()->json([
-                'error' => 'El número total de habitaciones excede la capacidad máxima del hotel.'
-            ], 422);
-        }
-
-        $room->update($validated);
-        return $room;
-    }
+     public function update(Request $request, Room $room)
+     {
+         $validated = $request->validate([
+             'type' => 'required|in:Standard,Junior,Suite',
+             'accommodation' => 'required',
+             'quantity' => 'required|integer|min:1',
+         ]);
+     
+         // Validar las acomodaciones según el tipo de habitación
+         $this->validateAccommodation($validated['type'], $validated['accommodation']);
+     
+         $hotel = $room->hotel;
+     
+         // Validar que no haya tipos/acomodaciones duplicadas para el mismo hotel
+         $existingRoom = $hotel->rooms()
+             ->where('type', $validated['type'])
+             ->where('accommodation', $validated['accommodation'])
+             ->where('id', '!=', $room->id) // Excluir la habitación que estamos actualizando
+             ->first();
+     
+         if ($existingRoom) {
+             return response()->json([
+                 'error' => 'Ya existe este tipo de habitación con la misma acomodación en este hotel.'
+             ], 422);
+         }
+     
+         // Validar que no exceda el número máximo de habitaciones
+         $totalRooms = $hotel->rooms->sum('quantity') - $room->quantity + $validated['quantity'];
+     
+         if ($totalRooms > $hotel->max_rooms) {
+             return response()->json([
+                 'error' => 'El número total de habitaciones excede la capacidad máxima del hotel.'
+             ], 422);
+         }
+     
+         $room->update($validated);
+         return $room;
+     }
 
      /**
      * Eliminar una habitación.

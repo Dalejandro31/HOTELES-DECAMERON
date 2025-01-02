@@ -105,7 +105,7 @@ class HotelController extends Controller
         ]);
 
         $hotel->update($validated);
-        return $hotel;
+        return response()->json($hotel, 200);  
     }
 
     public function destroy(Hotel $hotel)
